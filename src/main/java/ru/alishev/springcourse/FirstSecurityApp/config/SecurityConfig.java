@@ -37,9 +37,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/login", "/error").permitAll()
+                        .requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -47,8 +46,11 @@ public class SecurityConfig {
                         .loginProcessingUrl("/process_login")
                         .defaultSuccessUrl("/hello", true)
                         .failureUrl("/auth/login?error")
+                )
+                .logout((logout) -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/auth/login ")
                 );
-
 
         return http.build();
     }
