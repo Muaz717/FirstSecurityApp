@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +19,7 @@ import ru.alishev.springcourse.FirstSecurityApp.services.PersonDetailsService;
 
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -39,7 +42,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
